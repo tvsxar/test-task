@@ -1,12 +1,43 @@
-# React + Vite
+## Movie App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Опис
 
-Currently, two official plugins are available:
+Додаток на React для перегляду та керування списком фільмів. Використовує зовнішній бекенд API для збереження даних.
+## Встановлення та запуск локально
+	1.	Клонувати репозиторій:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+git clone https://github.com/tvsxar/movie-app.git
+cd movie-app
 
-## Expanding the ESLint configuration
+	2.	Створити файл .env у корені проєкту і вказати URL API бекенду:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+VITE_API_URL=http://localhost:8000/api/v1
+
+ 	3.	Встановити залежності:
+
+npm install
+
+ 	4.	Запустити додаток:
+
+npm run dev
+
+## Збірка Docker образу
+	1.	Зібрати образ:
+     
+docker build -t tvsxar/movies .
+
+	2.	Запустити контейнер:
+
+docker run --name movies -p 3000:80 -e VITE_API_URL=http://localhost:8000/api/v1 tvsxar/movies
+
+## Запуск через DockerHub
+Образ доступний у DockerHub за адресою:
+tvsxar/movies:latest
+
+Для запуску образу з DockerHub:
+
+docker pull tvsxar/movies:latest
+docker run --name movies -p 3000:80 -e VITE_API_URL=http://localhost:8000/api/v1 tvsxar/movies:latest
+
+## Конфігурація
+Змінна оточення VITE_API_URL визначає URL бекенд API. Це дозволяє змінювати адресу API без зміни коду.
