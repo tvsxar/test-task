@@ -5,9 +5,8 @@
 Додаток на React для перегляду та керування списком фільмів. Використовує зовнішній бекенд API для збереження даних.
 ## Встановлення та запуск локально
 1.	Клонувати репозиторій:
-
 ```
-git clone https://github.com/tvsxar/movie-app.git
+git clone https://github.com/tvsxar/test-task.git
 cd movie-app
 ```
 
@@ -24,23 +23,26 @@ npm install
 ```
 npm run dev
 ```
-## Збірка Docker образу
-1.	Зібрати образ:
+
+## Запуск через Docker
+### Крок 1. Запустити бекенд (API):
 ```
-docker build -t tvsxar/movies .
+docker run -d -p 8000:8000 webbylabhub/movies
 ```
-2.	Запустити контейнер:
+
+### Крок 2. Запустити фронтенд:
 ```
-docker run --name movies -p 3000:80 -e VITE_API_URL=http://localhost:8000/api/v1 tvsxar/movies
+docker run -p 3000:80 -e VITE_API_URL=http://localhost:8000/api/v1 tvsxar/movie-app
 ```
+
 ## Запуск через DockerHub
 Образ доступний у DockerHub за адресою:
-tvsxar/movies:latest
+tvsxar/movie-app:latest
 
 Для запуску образу з DockerHub:
 ```
-docker pull tvsxar/movies:latest
-docker run --name movies -p 3000:80 -e VITE_API_URL=http://localhost:8000/api/v1 tvsxar/movies:latest
+docker pull tvsxar/movie-app:latest
+docker run --name movies -p 3000:80 -e VITE_API_URL=http://localhost:8000/api/v1 tvsxar/movie-app:latest
 ```
 ## Конфігурація
 Змінна оточення VITE_API_URL визначає URL бекенд API. Це дозволяє змінювати адресу API без зміни коду.
