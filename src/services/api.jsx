@@ -1,7 +1,9 @@
-const API_URL = import.meta.env.VITE_API_URL;;
-const credentials = {
-  email: "zxcq020520@gmail.com",
+const API_URL = import.meta.env.VITE_API_URL;
+const defaultUser = {
+  name: "Admin",
+  email: "test-admin@gmail.com",
   password: "admin-password",
+  confirmPassword: "admin-password"
 };
 
 export async function getMovies(token) {
@@ -62,20 +64,18 @@ export async function getMovieById(id, token) {
   return data.data;
 }
 
-// login function
+// register a new default user
+export async function ensureDefaultUserExists() {
+  try {
+    const response = await fetch(`${API_URL}/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(defaultUser),
+    });
 
-export async function loginUser() {
-  const response = await fetch(`${API_URL}/sessions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
-
-  const data = await response.json();
-
-  if (data.status !== 1) {
-    throw new Error(data?.error?.code || "Login failed");
+    const data = await response.json();
+    console.log("Registration result:", data);
+  } catch (err) {
+    console.error("Error creating default user:", err);
   }
-
-  return data.token;
 }

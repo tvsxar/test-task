@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef, use } from "react";
-import { loginUser, getMovies, deleteMovie, addMovie } from "../services/api";
+import { getMovies, deleteMovie, addMovie } from "../services/api";
 import AddForm from "./AddForm";
 import "../styles/HomePage.scss";
 
-function HomePage() {
+function HomePage({ token }) {
   const [movies, setMovies] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const tokenRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredMovies, setFilteredMovies] = useState([]);
 
@@ -25,28 +24,26 @@ function HomePage() {
   }, [searchQuery, movies]);
 
   useEffect(() => {
-    async function loginAndLoad() {
-      try {
-        const token = await loginUser();
-        tokenRef.current = token;
-
-        const moviesData = await getMovies(token);
-
-        const sortedMovies = moviesData.sort((a, b) =>
-          a.title.localeCompare(b.title, "en")
-        );
-        setMovies(sortedMovies);
-      } catch (error) {
-        console.error("Login error:", error);
-      }
+    async function loadMovies() {
+    try {
+      const moviesData = await getMovies(token);
+      const sortedMovies = moviesData.sort((a, b) =>
+        a.title.localeCompare(b.title, "en")
+      );
+      setMovies(sortedMovies);
+    } catch (error) {
+      console.error("Failed to load movies:", error);
     }
+  }
 
-    loginAndLoad();
-  }, []);
+  if (token) {
+    loadMovies();
+  }
+  }, [token]);
 
   async function handleDelete(id) {
     try {
-      await deleteMovie(id, tokenRef.current);
+      await deleteMovie(id, token);
       setMovies(movies.filter((movie) => movie.id !== id));
     } catch (error) {
       console.error("Failed to delete movie:", error);
@@ -56,7 +53,7 @@ function HomePage() {
 
   async function handleAddMovie(movie) {
     try {
-      const added = await addMovie(movie, tokenRef.current);
+      const added = await addMovie(movie, token);
 
       setMovies((prev) =>
         [...prev, added.data].sort((a, b) =>
